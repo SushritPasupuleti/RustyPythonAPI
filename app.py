@@ -1,16 +1,21 @@
 import psycopg2
+import os
 from robyn import Robyn
+from dotenv import load_dotenv
 
-DB_NAME = "postgresDB"
+load_dotenv()
+
+DB_NAME = os.getenv("DB_NAME")
 DB_HOST = "localhost"
-DB_USER = "postgres"
-DB_PASS = "password"
-DB_PORT = "5455"
+DB_USER = os.getenv("DB_USER")
+DB_PASS = os.getenv("DB_PASS")
+DB_PORT = "5432"
 
-conn = psycopg2.connect(database=DB_NAME, host=DB_HOST, user=DB_USER, password=DB_PASS, port=DB_PORT)
+conn = psycopg2.connect(
+    database=DB_NAME, host=DB_HOST, user=DB_USER, password=DB_PASS, port=DB_PORT
+)
 
 app = Robyn(__file__)
-
 
 # create a route to fetch all users
 @app.get("/users")
@@ -25,6 +30,5 @@ def get_users():
 def index():
     return "Hello World!"
 
-
 if __name__ == "__main__":
-    app.start(url="0.0.0.0", port=8080)
+    app.start(host="0.0.0.0", port=8080)
